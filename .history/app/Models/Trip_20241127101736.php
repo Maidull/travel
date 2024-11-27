@@ -21,7 +21,7 @@ class Trip extends Model
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
-    protected $fillable = ['name','description','price','duration','start_date','end_date','destination_id'];
+    protected $fillable = ['name','description','price','duration','start_date','end_date','desti'];
     // protected $hidden = [];
 
     /*
