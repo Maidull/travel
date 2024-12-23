@@ -10,7 +10,10 @@
         "backpack/theme-tabler": "^1.2",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.0",
-        "laravel/sanctum": "^3.2",
+        "laravel/passport": "*",
+        "illuminate/auth": "^10.0",
+        "illuminate/support": "^10.0",
+        "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8"
     },
     "require-dev": {
