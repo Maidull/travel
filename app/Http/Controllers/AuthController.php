@@ -37,35 +37,28 @@ class AuthController extends Controller
     // Đăng nhập
     public function login(Request $request)
     {
-        // Validate the input
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|string|email|max:255',
+        $request->validate([
+            'email' => 'required|email',
             'password' => 'required|string|min:8',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 422);
+        $user = AppUser::where('email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json(['error' => 'Invalid credentials'], 401);
         }
 
-        // Check if user exists and validate password
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            // Lấy người dùng hiện tại
-            $user = Auth::user();
-
-            // Ở đây bạn sẽ không tạo token mới mà chỉ trả về access_token đã có từ trước.
-            // Chỉ cần trả về thông tin người dùng và access_token mà ứng dụng React Native đã lấy từ /oauth/token
-
-            return response()->json([
-                'message' => 'Login successful',
-                'user' => $user, // Trả về thông tin người dùng
-                'token' => $request->bearerToken() // Trả về token mà bạn đã có
-            ], 200);
-        }
-
-        // Nếu đăng nhập thất bại
-        Log::warning('Unauthorized login attempt', [
-            'email' => $request->email
+        // Tạo access token thủ công
+        $token = bin2hex(random_bytes(40)); // Token ngẫu nhiên
+        $user->tokens()->create([
+            'token' => $token,
+            'expires_at' => now()->addHours(2), // Token hết hạn sau 2 giờ
         ]);
-        return response()->json(['error' => 'Unauthorized'], 401);
+
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+            'expires_in' => 7200, // 2 giờ
+        ]);
     }
 }

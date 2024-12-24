@@ -3,6 +3,7 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable; 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Passport\HasApiTokens;
 
 class AppUser extends Authenticatable 
@@ -30,5 +31,10 @@ class AppUser extends Authenticatable
     public function getAuthPassword()
     {
         return $this->password;
+    }
+
+    public function tokens(): HasMany
+    {
+        return $this->hasMany(OauthAccessToken::class, 'user_id');
     }
 }

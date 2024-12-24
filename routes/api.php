@@ -26,14 +26,13 @@ use Laravel\Passport\Http\Controllers\AccessTokenController;
 //     return $request->user();
 // });
 Route::post('/app/register', [AuthController::class, 'register']);
+Route::post('/app/login', [AuthController::class, 'login']);
 Route::post('/oauth/token', [AccessTokenController::class, 'issueToken']);
 
-Route::post('/app/login', [AccessTokenController::class, 'issueToken'])->middleware('cors');
 // Lấy danh sách trips
 Route::get('/trip', function () {
     return Trip::all();
-})->middleware('cors');
-
+});
 
 // //lay danh sach trip da dat 
 // Route::get('/user-trip/{user_id}', function ($user_id) {
